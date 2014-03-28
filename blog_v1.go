@@ -17,8 +17,9 @@ type Blog struct {
 // .......................................................
 
 func main() {
-	var blogs map[string] Blog  // blogs 为一个map变量名，键为string，值为Blog
-	blogs = make(map[string] Blog)
+	// map相关于Python中的dict
+	var blogs map[string] Blog  // blogs 为一个map变量名，键为string，值为Blog 此步为变量声明
+	blogs = make(map[string] Blog) // 这步使用make()生成一个map，键为string，内容为Blog类型
 
 	// add data
 	blogs["1"] = Blog{"1", "hello, world", "wyatt", "Mr. Hello", "2014-03-28"}
