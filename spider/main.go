@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 /* 简易爬虫，读取一个页面 */
 
@@ -20,6 +21,7 @@ func Content(url string) (content string, status int) {
 	}
 
 	defer res.Body.Close()
+	// func ReadAll(r io.Reader) ([]byte, error)，读取数据，直接到err或是EOF才结束读取
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Printf("%s\n", err)
@@ -32,6 +34,18 @@ func Content(url string) (content string, status int) {
 	return 
 }
 
+// 将一个内容写入到文件
+func Html2File(content string){
+	f, err := os.Create("golang.html")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defer f.Close()
+	f.WriteString(content)
+}
+
 func main() {
 	html, status := Content(URL)
 	if status != http.StatusOK {
@@ -39,5 +53,7 @@ func main() {
 		return 
 	}
 	fmt.Printf("%s\n", html)
+	// 将内容写到一个文件
+	Html2File(html)
 }
 
