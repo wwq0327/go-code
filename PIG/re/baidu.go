@@ -21,6 +21,7 @@ func main() {
 	}
 
 	src := string(body)
+	fmt.Printf("%T, %T\n", body, src)
 
 	//将HTML标签全转换成小写
 	re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")

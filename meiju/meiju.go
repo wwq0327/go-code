@@ -8,6 +8,7 @@ import (
 	"time"
 	"strconv"
 	"strings"
+	"regexp"
 )
 
 const url = "http://www.yyets.com/tv/schedule"
@@ -42,6 +43,16 @@ func get_day_str() string {
 	return day_str
 }
 
+// 获取当天的美剧时间表HTML
+func get_day_html(html string, day string) []string {
+	re_str := fmt.Sprintf("<td class=\"(cur|ihbg)\">.+?<dt>%s</dt>(.+?)</dl>", day)
+	//fmt.Println(re_str)
+	re, _ := regexp.Compile(re_str)
+	src := re.FindAllString(html, -1)
+	return src
+}
+
+
 // 打印表头
 func print_str() {
 	fmt.Printf("%s\n", strings.Repeat("=", 72))
@@ -56,6 +67,8 @@ func main() {
 		fmt.Printf("Error code: %d\n", status)
 		return 
 	}
-	fmt.Printf("%s\n", html)
+	fmt.Printf("%T\n",html)
+	day_html := get_day_html(html, day)
+	fmt.Println(day_html)
 
 }
