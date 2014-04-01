@@ -28,7 +28,7 @@ func main() {
 	}
 
 	if len(os.Args) == 3 && os.Args[2] == "--bar" {
-		fmt.Println(strings.Repeat("*", 7 * len(os.Args[1])))
+		fmt.Println(strings.Repeat("*", 8 * len(os.Args[1])))
 	}
 
 	stringOfDigits := os.Args[1]
@@ -38,7 +38,7 @@ func main() {
 			// 获取相应的ASCII码的值，这里与0相比较，得到索引值
 			digit := stringOfDigits[column] - '0'  
 			if 0 <= digit && digit <= 9 {
-				line += bigDigits[digit][row] + " "
+				line += bigDigits[digit][row] + "   "
 			} else {
 				log.Fatal("invalid whole number")
 			}
@@ -46,4 +46,8 @@ func main() {
 		fmt.Println(line)
 	}
 
+
+	if len(os.Args) == 3 && os.Args[2] == "--bar" {
+		fmt.Println(strings.Repeat("*", 8 * len(os.Args[1])))
+	}
 }
