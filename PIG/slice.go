@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"time"
 )
 
 func main() {
-
+	now := time.Now()
+	fmt.Println(now.Day())
+	fmt.Println(time.Now().Day())
 }

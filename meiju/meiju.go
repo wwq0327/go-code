@@ -5,6 +5,9 @@ import (
 	//"os"
 	"net/http"
 	"io/ioutil"
+	"time"
+	"strconv"
+	"strings"
 )
 
 const url = "http://www.yyets.com/tv/schedule"
@@ -32,11 +35,27 @@ func get_content(url string)(content string, status int) {
 	return content, status
 }
 
+// 打印当天所在天的字符
+func get_day_str() string {
+	day := time.Now().Day()
+	day_str := strconv.Itoa(day) + "号" // 取当天号数
+	return day_str
+}
+
+// 打印表头
+func print_str() {
+	fmt.Printf("%s\n", strings.Repeat("=", 72))
+}
+
 func main() {
+	day := get_day_str()
+	fmt.Printf("%s 的美剧更新情况为:\n", day)
+	print_str()
 	html, status := get_content(url)
 	if status != http.StatusOK {
 		fmt.Printf("Error code: %d\n", status)
 		return 
 	}
 	fmt.Printf("%s\n", html)
+
 }
