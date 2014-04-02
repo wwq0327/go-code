@@ -48,7 +48,6 @@ func get_day_str() string {
 func get_day_html(html string, day string) string {
 	_s := `(?s)<td class=\"(cur|ihbg)\">\s+<dl>\s+<dt>%s</dt>(.+?)</dl>`
 	re_str := fmt.Sprintf(_s, day)
-	fmt.Println(re_str)
 	re, _ := regexp.Compile(re_str)
 	src := re.FindAllString(html, -1)
 	return src[0]
@@ -56,8 +55,9 @@ func get_day_html(html string, day string) string {
 
 // 解析HTML，获取节目的文字内容
 func get_jm_list(html string) []string {
-	reg, _ := regexp.Compile(`(?s)<div class="floatSpan"><span>(.+?)<span></div>`)
+	reg, _ := regexp.Compile(`(?s)<div class="floatSpan"><span>(?P<jm>.+?)<span></div>`)
 	jm_list := reg.FindAllString(html, -1)
+	
 	return jm_list
 }
 
@@ -79,6 +79,9 @@ func main() {
 	day_html := get_day_html(html, day)
 	//fmt.Println(day_html)
 	jm_list := get_jm_list(day_html)
-	fmt.Printf("%q\n", jm_list)
+	// fmt.Printf("%q\n", jm_list)
+	for _, match := range jm_list {
+		fmt.Printf("%s\n", match)
+	}
 
 }
