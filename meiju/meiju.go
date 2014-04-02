@@ -46,7 +46,8 @@ func get_day_str() string {
 
 // 获取当天的美剧时间表HTML
 func get_day_html(html string, day string) []string {
-	re_str := fmt.Sprintf("<td class=\"(cur|ihbg)\">.+?<dt>%s</dt>(.+?)</dl>", day)
+	_s := `(?s)<td class=\"(cur|ihbg)\">.+?<dt>%s</dt>(.+?)</dl>`
+	re_str := fmt.Sprintf(_s, day)
 	fmt.Println(re_str)
 	re, _ := regexp.Compile(re_str)
 	src := re.FindAllString(html, -1)
