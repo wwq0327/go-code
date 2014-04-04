@@ -5,8 +5,11 @@ import (
 	"os"
 	"log"
 	"time"
-	//"strings"
+	"strings"
 	"path/filepath"
+	//"html/template"
+	"io/ioutil"
+	"github.com/russross/blackfriday"
 )
 
 const (
@@ -33,7 +36,9 @@ func main() {
 		blog := MDBlog{filename:os.Args[2], title:os.Args[2]}
 		blog.createNewPost()
 	}
-
+	
+	p := getPosts()
+	fmt.Println(p)
 }
 
 // 创建一个新的文件
@@ -67,3 +72,31 @@ func isExists(path string) bool {
 	}
 	return os.IsExist(err)
 }
+
+// 获取所有.md文件信息
+func getPosts() []MDBlog {
+	a := []MDBlog{}
+	files, _ := filepath.Glob("./contents/*")
+	for _, f := range files {
+		file := strings.Replace(f, "contents/", "", -1)
+		file = strings.Replace(file, ".md", "", -1)
+		fileread, _ := ioutil.ReadFile(f)
+		lines := strings.Split(string(fileread,), "\n")
+		title := string(lines[0])
+		datetime := string(lines[1])
+		content := strings.Join(lines[3:len(lines)], "\n")
+		content = string(blackfriday.MarkdownCommon([]byte(content)))
+		a = append(a, MDBlog{file, title, datetime, content})
+	}
+	return a
+}
+
+
+// 将所有的.md文件生成html文件
+/*
+func genHtml() {
+	posts := getPosts()
+	t := template.New("index.html")
+	t, _ = t.ParseFiles("index.html")
+}
+*/	
