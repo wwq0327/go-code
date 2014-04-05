@@ -93,10 +93,9 @@ func getPosts() []MDBlog {
 
 
 // 将所有的.md文件生成html文件
-/*
 func genHtml() {
 	posts := getPosts()
 	t := template.New("index.html")
 	t, _ = t.ParseFiles("index.html")
 }
-*/	
+	

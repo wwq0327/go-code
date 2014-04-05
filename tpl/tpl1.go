@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"os"
+	"fmt"
 )
 
 type Person struct {
@@ -14,5 +15,6 @@ func main() {
 	t, _ = t.Parse("hello, {{ .UserName}}!")
 	p := Person{"Wyatt"}
 	t.Execute(os.Stdout, p)
+
 }
 
