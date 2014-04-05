@@ -2,26 +2,26 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"log"
-	"time"
-	"strings"
-	"path/filepath"
-	//"html/template"
-	"io/ioutil"
 	"github.com/russross/blackfriday"
+	"html/template"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 const (
-	MD_DIR = "./contents"  // markdown 源文件目录
-    OUTPUT = "./output"    // 输出文件目录
+	MD_DIR = "./contents" // markdown 源文件目录
+	OUTPUT = "./output"   // 输出文件目录
 )
 
 type MDBlog struct {
-	filename string   // 文件名
-	title string
-	datetime string   //发布时间 
-	content string    // 内容
+	Filename string // 文件名
+	Title    string
+	Datetime string //发布时间
+	Content  string // 内容
 }
 
 func main() {
@@ -31,19 +31,21 @@ func main() {
 		fmt.Printf("Usage: %s -new <filename> : create new blog file \n\t -gen generate html\n", filepath.Base(os.Args[0]))
 		os.Exit(0)
 	}
- 
+
 	if os.Args[1] == "-new" {
-		blog := MDBlog{filename:os.Args[2], title:os.Args[2]}
+		blog := MDBlog{Filename: os.Args[2], Title: os.Args[2]}
 		blog.createNewPost()
 	}
-	
-	p := getPosts()
-	fmt.Println(p)
+
+	if os.Args[1] == "-gen" {
+		genHtml()
+	}
+
 }
 
 // 创建一个新的文件
 func (blog MDBlog) createNewPost() error {
-	md_file_path := MD_DIR + "/" + blog.filename + ".md"
+	md_file_path := MD_DIR + "/" + blog.Filename + ".md"
 
 	if exists := isExists(md_file_path); exists {
 		log.Fatal("file is exists!")
@@ -59,8 +61,8 @@ func (blog MDBlog) createNewPost() error {
 
 	defer file.Close()
 	datetime := time.Now().Format("2006-01-02 15:04:05")
-	file.WriteString("Title: "+ blog.title + "\nDate: "+datetime+"\n\n")
-	
+	file.WriteString("Title: " + blog.Title + "\nDate: " + datetime + "\n\n")
+
 	return nil
 }
 
@@ -81,7 +83,7 @@ func getPosts() []MDBlog {
 		file := strings.Replace(f, "contents/", "", -1)
 		file = strings.Replace(file, ".md", "", -1)
 		fileread, _ := ioutil.ReadFile(f)
-		lines := strings.Split(string(fileread,), "\n")
+		lines := strings.Split(string(fileread), "\n")
 		title := string(lines[0])
 		datetime := string(lines[1])
 		content := strings.Join(lines[3:len(lines)], "\n")
@@ -91,11 +93,15 @@ func getPosts() []MDBlog {
 	return a
 }
 
-
 // 将所有的.md文件生成html文件
 func genHtml() {
+	file, err := os.Create(OUTPUT + "/" + "index.html")
+	if err != nil {
+		fmt.Print(err)
+	}
 	posts := getPosts()
 	t := template.New("index.html")
 	t, _ = t.ParseFiles("index.html")
+	fmt.Println(posts)
+	t.Execute(file, posts)
 }
-	
