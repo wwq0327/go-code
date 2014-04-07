@@ -3,32 +3,32 @@ package main
 import (
 	"fmt"
 	//"os"
-	"net/http"
 	"io/ioutil"
-	"time"
+	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
-	"regexp"
+	"time"
 )
 
 // http://play.golang.org/p/XPXSXdLEDd
 const url = "http://www.yyets.com/tv/schedule"
 
 // 读取指定页面的所有HTML内容
-func get_content(url string)(content string, status int) {
+func get_content(url string) (content string, status int) {
 	res, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		status = -100
 		return
 	}
-	
+
 	defer res.Body.Close() // 关闭读取
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		status = -200
-		return 
+		return
 	}
 
 	status = res.StatusCode // 读取状态码
@@ -57,13 +57,20 @@ func get_day_html(html string, day string) string {
 func get_jm_list(html string) []string {
 	reg, _ := regexp.Compile(`(?s)<div class="floatSpan"><span>(?P<jm>.+?)<span></div>`)
 	jm_list := reg.FindAllString(html, -1)
-	
+
 	return jm_list
 }
 
 // 打印表头
 func print_str() {
 	fmt.Printf("%s\n", strings.Repeat("=", 72))
+}
+
+// 去掉行头行尾内容
+func replace(str string) string {
+	s := strings.Replace(str, `<div class="floatSpan"><span>`, "", 1)
+	s = strings.Replace(s, `<span></div>`, "", 1)
+	return s
 }
 
 func main() {
@@ -73,7 +80,7 @@ func main() {
 	html, status := get_content(url)
 	if status != http.StatusOK {
 		fmt.Printf("Error code: %d\n", status)
-		return 
+		return
 	}
 	//fmt.Printf("%T\n",html)
 	day_html := get_day_html(html, day)
@@ -81,7 +88,7 @@ func main() {
 	jm_list := get_jm_list(day_html)
 	// fmt.Printf("%q\n", jm_list)
 	for _, match := range jm_list {
-		fmt.Printf("%s\n", match)
+		fmt.Printf("%s\n", replace(match))
 	}
 
 }

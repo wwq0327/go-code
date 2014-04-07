@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 	"os"
-	"fmt"
 )
 
 type Person struct {
@@ -12,9 +11,8 @@ type Person struct {
 
 func main() {
 	t := template.New("Fieldname exemple")
-	t, _ = t.Parse("hello, {{ .UserName}}!")
+	t, _ = t.Parse("hello, <h1>{{ .UserName}}!</h1>")
 	p := Person{"Wyatt"}
 	t.Execute(os.Stdout, p)
 
 }
-
