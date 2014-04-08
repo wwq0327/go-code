@@ -12,6 +12,7 @@ func main() {
 	defer f.Close()
 
 	f.WriteString("hello, world\n")
+
 }
 
 func checkError(err error) {
