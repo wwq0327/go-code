@@ -13,9 +13,15 @@ func main() {
 	// 改变工作目录
 	// chdir()
 	// Chown()
-	chown()
+	// chown()
 }
 
+func checkError(err Error) {
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
 func chdir() {
 	// Chdir
 	pwd, err := os.Getwd()
