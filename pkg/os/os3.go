@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"syscall"
 )
 
 func main() {
@@ -10,7 +11,9 @@ func main() {
 	// 改变文件模式
 	chmod()
 	// 改变工作目录
-	chdir()
+	// chdir()
+	// Chown()
+	chown()
 }
 
 func chdir() {
@@ -37,7 +40,7 @@ func chdir() {
 }
 
 func chmod() {
-	// 	test.txt's mode is: -rw-r--r--(644)
+	// test.txt's mode is: -rw-r--r--(644)
 	// test.txt's mode is: -rwxrwxrwx(777)
 	fi, err := os.Stat("test.txt")
 	if err != nil {
@@ -60,5 +63,31 @@ func chmod() {
 	}
 
 	fmt.Printf("test.txt's mode is: %s(%o)\n", fi.Mode(), fi.Mode()&0777)
+
+}
+
+// 修改一个文件的所属用户和组
+func chown() {
+	fi, err := os.Stat("test.txt")
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+
+	fmt.Printf("test.txt: uid=%d, gid=%d\n", fi.Sys().(*syscall.Stat_t).Uid, fi.Sys().(*syscall.Stat_t).Gid)
+
+	fi, err = os.Chown("test.txt", 99, 99)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+
+	fi, err = os.Stat("test.txt")
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+
+	fmt.Printf("test.txt: uid=%d, gid=%d\n", fi.Sys().(*syscall.Stat_t).Uid, fi.Sys().(*syscall.Stat_t).Gid)
 
 }
