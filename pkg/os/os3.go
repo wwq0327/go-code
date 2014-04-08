@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"syscall"
+	// "syscall"
 )
 
 func main() {
@@ -14,9 +14,16 @@ func main() {
 	// chdir()
 	// Chown()
 	// chown()
+	// 聊取当前变量环境
+	fmt.Printf("The path is: %+v\n", os.Environ())
+	fi, _ := os.Stat("test.txt")
+	fmt.Printf("File info: %+v\n", fi)
+	// 系统内存大小
+	fmt.Printf("%d\n", os.Getpagesize())
+	fmt.Printf("The temp dir is: %s\n", os.TempDir())
 }
 
-func checkError(err Error) {
+func checkError(err error) {
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -73,7 +80,7 @@ func chmod() {
 }
 
 // 修改一个文件的所属用户和组
-func chown() {
+/*func chown() {
 	fi, err := os.Stat("test.txt")
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
@@ -97,3 +104,4 @@ func chown() {
 	fmt.Printf("test.txt: uid=%d, gid=%d\n", fi.Sys().(*syscall.Stat_t).Uid, fi.Sys().(*syscall.Stat_t).Gid)
 
 }
+*/
