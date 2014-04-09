@@ -15,7 +15,7 @@ import (
 const url = "http://www.yyets.com/tv/schedule"
 
 // 读取指定页面的所有HTML内容
-func get_content(url string) (content string, status int) {
+func getContent(url string) (content string, status int) {
 	res, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("%s\n", err)
@@ -38,31 +38,31 @@ func get_content(url string) (content string, status int) {
 }
 
 // 打印当天所在天的字符
-func get_day_str() string {
+func getDayString() string {
 	day := time.Now().Day()
-	day_str := strconv.Itoa(day) + "号" // 取当天号数
-	return day_str
+	daystr := strconv.Itoa(day) + "号" // 取当天号数
+	return daystr
 }
 
 // 获取当天的美剧时间表HTML
-func get_day_html(html string, day string) string {
+func getDayHTML(html string, day string) string {
 	_s := `(?s)<td class=\"(cur|ihbg)\">\s+<dl>\s+<dt>%s</dt>(.+?)</dl>`
-	re_str := fmt.Sprintf(_s, day)
-	re, _ := regexp.Compile(re_str)
+	restr := fmt.Sprintf(_s, day)
+	re, _ := regexp.Compile(restr)
 	src := re.FindAllString(html, -1)
 	return src[0]
 }
 
 // 解析HTML，获取节目的文字内容
-func get_jm_list(html string) []string {
+func getJMList(html string) []string {
 	reg, _ := regexp.Compile(`(?s)<div class="floatSpan"><span>(?P<jm>.+?)<span></div>`)
-	jm_list := reg.FindAllString(html, -1)
+	jmlist := reg.FindAllString(html, -1)
 
-	return jm_list
+	return jmlist
 }
 
 // 打印表头
-func print_str() {
+func printString() {
 	fmt.Printf("%s\n", strings.Repeat("=", 72))
 }
 
@@ -74,20 +74,20 @@ func replace(str string) string {
 }
 
 func main() {
-	day := get_day_str()
+	day := getDayString()
 	fmt.Printf("%s 的美剧更新情况为:\n", day)
-	print_str()
-	html, status := get_content(url)
+	printString()
+	html, status := getContent(url)
 	if status != http.StatusOK {
 		fmt.Printf("Error code: %d\n", status)
 		return
 	}
 	//fmt.Printf("%T\n",html)
-	day_html := get_day_html(html, day)
+	dayhtml := getDayHTML(html, day)
 	//fmt.Println(day_html)
-	jm_list := get_jm_list(day_html)
+	jmlist := getJMList(dayhtml)
 	// fmt.Printf("%q\n", jm_list)
-	for _, match := range jm_list {
+	for _, match := range jmlist {
 		fmt.Printf("%s\n", replace(match))
 	}
 
