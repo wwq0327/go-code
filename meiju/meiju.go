@@ -1,8 +1,8 @@
+// 从yyets上读取每天的美刷列表
 package main
 
 import (
 	"fmt"
-	//"os"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-// http://play.golang.org/p/XPXSXdLEDd
 const url = "http://www.yyets.com/tv/schedule"
 
 // 读取指定页面的所有HTML内容
@@ -82,11 +81,8 @@ func main() {
 		fmt.Printf("Error code: %d\n", status)
 		return
 	}
-	//fmt.Printf("%T\n",html)
 	dayhtml := getDayHTML(html, day)
-	//fmt.Println(day_html)
 	jmlist := getJMList(dayhtml)
-	// fmt.Printf("%q\n", jm_list)
 	for _, match := range jmlist {
 		fmt.Printf("%s\n", replace(match))
 	}
