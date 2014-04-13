@@ -2,15 +2,21 @@ package main
 
 import (
 	"flag"
+	"fmt"
 )
 
 var flagName string
 
 func init() {
-	flag.StringVar(&flagName, "name", "default name", "help name message.")
+	flag.StringVar(&flagName, "name", "wyatt", "help name message.")
 	flag.Parse()
 }
 
 func main() {
-	flag.PrintDefaults()
+
+	fmt.Println(flag.Args())
+}
+
+func Hello() {
+	fmt.Println("hello, world")
 }
