@@ -1,18 +1,18 @@
 package main
 
 import (
+	"fmt"
+	"html/template"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"io/ioutil"
-	"html/template"
 	"path"
-//	"fmt"
 )
 
 const (
-	UPLOAD_DIR = "./uploads"
+	UPLOAD_DIR   = "./uploads"
 	TEMPLATE_DIR = "./views"
 )
 
@@ -22,9 +22,9 @@ func init() {
 	fileInfoArr, err := ioutil.ReadDir(TEMPLATE_DIR)
 	if err != nil {
 		panic(err)
-		return 
+		return
 	}
-	
+
 	var templateName, templatePath string
 
 	for _, fileInfo := range fileInfoArr {
@@ -37,6 +37,8 @@ func init() {
 		t := template.Must(template.ParseFiles(templatePath))
 		templates[templatePath] = t
 	}
+
+	fmt.Println(templates)
 
 	//fmt.Println(templates)
 }
@@ -52,8 +54,8 @@ func main() {
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {		
-		if err := renderHtml(w, "upload", nil); err != nil {
+	if r.Method == "GET" {
+		if err := renderHtml(w, "upload.html", nil); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -82,10 +84,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 // view the image
 func viewHandler(w http.ResponseWriter, r *http.Request) {
-	imageId := r.FormValue("id") // 获取图片id
+	imageId := r.FormValue("id")            // 获取图片id
 	imagePath := UPLOAD_DIR + "/" + imageId // 重组图片访问地址
 
 	if exists := isExists(imagePath); !exists {
@@ -110,7 +111,7 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 	fileInfoArr, err := ioutil.ReadDir("./uploads")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return 
+		return
 	}
 
 	locals := make(map[string]interface{})
@@ -119,10 +120,10 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 	for _, fileInfo := range fileInfoArr {
 		images = append(images, fileInfo.Name())
 	}
-	
+
 	locals["images"] = images
-	
-	if err = renderHtml(w, "list", locals); err != nil {
+
+	if err = renderHtml(w, "list.html", locals); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -130,6 +131,7 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 
 // 模版加载及渲染函数
 func renderHtml(w http.ResponseWriter, tmpl string, locals map[string]interface{}) (err error) {
+	tmpl = TEMPLATE_DIR + "/" + tmpl
 	err = templates[tmpl].Execute(w, locals)
 	return err
 }
