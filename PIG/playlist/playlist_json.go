@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -16,6 +17,10 @@ type Song struct {
 	Seconds  int
 }
 
+type SongsSlice struct {
+	Songs []Song
+}
+
 func main() {
 	if len(os.Args) == 1 || !strings.HasSuffix(os.Args[1], ".m3u") {
 		fmt.Printf("usage: %s <file.m3u>\n", filepath.Base(os.Args[0])) // filepath.Base(path string)返回一个只有文件名的字符串
@@ -25,7 +30,8 @@ func main() {
 		log.Fatal(err)
 	} else {
 		songs := readM3uPlaylist(string(rawByte))
-		writePisPlaylist(songs)
+		// writePisPlaylist(songs)
+		writePisPlaylistToJson(songs)
 	}
 }
 
@@ -80,14 +86,28 @@ func mapPlatformDirSeparator(char rune) rune {
 	return char
 }
 
-func writePisPlaylist(songs []Song) {
-	fmt.Println("[playlist]")
-	for i, song := range songs {
-		i++
-		fmt.Printf("File%d=%s\n", i, song.Filename)
-		fmt.Printf("Title%d=%s\n", i, song.Title)
-		fmt.Printf("Length%d=%d\n", i, song.Seconds)
+// func writePisPlaylist(songs []Song) {
+// 	fmt.Println("[playlist]")
+// 	for i, song := range songs {
+// 		i++
+// 		fmt.Printf("File%d=%s\n", i, song.Filename)
+// 		fmt.Printf("Title%d=%s\n", i, song.Title)
+// 		fmt.Printf("Length%d=%d\n", i, song.Seconds)
+// 	}
+
+// 	fmt.Printf("NumberOfEntries=%d\nVersion=2\n", len(songs))
+// }
+
+func writePisPlaylistToJson(songs []Song) {
+	var s SongsSlice
+	for _, song := range songs {
+		s.Songs = append(s.Songs, Song{song.Filename, song.Title, song.Seconds})
 	}
 
-	fmt.Printf("NumberOfEntries=%d\nVersion=2\n", len(songs))
+	b, err := json.Marshal(s)
+	if err != nil {
+		fmt.Println("json err:", err)
+	}
+
+	fmt.Println(string(b))
 }
