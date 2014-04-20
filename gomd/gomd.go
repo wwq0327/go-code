@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/russross/blackfriday"
-	"io"
+	"html/template"
+	// "io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css/"))))
 	http.HandleFunc("/", listHandler)
 	http.HandleFunc("/raw", rawHandler)
 	http.HandleFunc("/html", htmlHandler)
@@ -27,16 +28,18 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var listMd string
+	var listMd []string
 	for _, fileInfo := range fileInfoArr {
 		filename := fileInfo.Name()
 		fileExt := filepath.Ext(filename)
 		if fileExt == ".md" || fileExt == ".markdown" {
-			listMd += "<li><a href=\"/raw?name=" + filename + "\">Raw</a>|<a href=\"/html?name=" + filename + "\">" + filename + "</a></li>"
+			listMd = append(listMd, filename)
 		}
 	}
 
-	io.WriteString(w, "<html><body><ul>"+listMd+"</body></html>")
+	t := template.New("index template")
+	t, _ = template.ParseFiles("index.html")
+	t.Execute(w, listMd)
 }
 
 // 直接显示出源文件内容
@@ -56,6 +59,10 @@ func htmlHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("读取错误")
 	}
-	countet := string(blackfriday.MarkdownCommon(md))
-	io.WriteString(w, "<html><body><ul>"+countet+"</body></html>")
+	content := template.HTML(string(blackfriday.MarkdownCommon(md)))
+
+	t := template.New("html template")
+	t, _ = template.ParseFiles("md.html")
+
+	t.Execute(w, content)
 }

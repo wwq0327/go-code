@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		<title>markdown 文件查看器</title>
+		<link type="text/css" rel="stylesheet" href="/css/style.css">
+	</head>
+	<body>
+	<ul>
+	{{range .}}
+		<li><a href="/raw?name={{.}}">Raw</a>|<a href="/html?name={{.}}">{{.}}</a></li>
+	{{end}}
+	</ul>
+	</body>
+</html>
