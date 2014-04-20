@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/russross/blackfriday"
 	"html/template"
-	// "io"
 	"io/ioutil"
 	"log"
 	"net/http"
