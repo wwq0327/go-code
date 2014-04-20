@@ -51,5 +51,4 @@ func WriteToFile(fileName string) {
 	f.WriteString(CONTENT)
 
 	fmt.Printf("文件位置：%s\n", fp)
-
 }

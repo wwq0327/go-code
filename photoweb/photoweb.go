@@ -2,14 +2,14 @@ package main
 
 import (
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"io/ioutil"
 )
 
 const (
-	upform = "<html><body><form method=\"post\" action=\"/upload\" enctype=\"multipart/form-data\"><h2>Choose an image to upload:</h2><input name=\"image\" type=\"file\" /><input type=\"submit\" value=\"Upload\" /></form></body></html>"
+	upform     = "<html><body><form method=\"post\" action=\"/upload\" enctype=\"multipart/form-data\"><h2>Choose an image to upload:</h2><input name=\"image\" type=\"file\" /><input type=\"submit\" value=\"Upload\" /></form></body></html>"
 	UPLOAD_DIR = "./uploads"
 )
 
@@ -24,9 +24,9 @@ func main() {
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {		
+	if r.Method == "GET" {
 		io.WriteString(w, upform)
-		return 
+		return
 	}
 
 	if r.Method == "POST" {
@@ -54,10 +54,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 // view the image
 func viewHandler(w http.ResponseWriter, r *http.Request) {
-	imageId := r.FormValue("id") // 获取图片id
+	imageId := r.FormValue("id")            // 获取图片id
 	imagePath := UPLOAD_DIR + "/" + imageId // 重组图片访问地址
 
 	if exists := isExists(imagePath); !exists {
@@ -81,15 +80,14 @@ func isExists(path string) bool {
 func listHandler(w http.ResponseWriter, r *http.Request) {
 	fileInfoArr, err := ioutil.ReadDir("./uploads")
 	if err != nil {
-		http.Error(w, err.Error(),
-			http.StatusInternalServerError)
-	return 
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	var listHtml string
 	for _, fileInfo := range fileInfoArr {
 		imgid := fileInfo.Name()
-		listHtml += "<li><a href=\"/view?id="+imgid+"\">"+imgid+"</a></li>"
+		listHtml += "<li><a href=\"/view?id=" + imgid + "\">" + imgid + "</a></li>"
 	}
 
 	io.WriteString(w, "<html><body><ol>"+listHtml+"</ol></body></html>")
