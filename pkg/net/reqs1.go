@@ -27,8 +27,8 @@ func reqEncode() string {
 		os.Exit(0)
 	}
 
-	reqs.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
-	reqs.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0")
+	// reqs.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
+	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0")
 	fmt.Println(reqs.Header)
 	response, err := client.Do(reqs)
 	defer response.Body.Close()
