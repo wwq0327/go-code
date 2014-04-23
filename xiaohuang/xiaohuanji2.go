@@ -27,7 +27,7 @@ func main() {
 		} else {
 			ht, _ := HttpGet(&http.Client{}, URL, input, UserAgent)
 			p, _ := ioutil.ReadAll(ht)
-			fmt.Printf("小黄说： %s\n", p)
+			fmt.Printf("小黄说： %s\n", string(p))
 			fmt.Println(strings.Repeat("-", 40))
 		}
 	}
@@ -37,8 +37,6 @@ func HttpGet(client *http.Client, siteurl string, input string, header string) (
 	v := url.Values{}
 	v.Set("para", input)
 	data := v.Encode()
-	// fmt.Println(data)
-	// fmt.Println(strings.NewReader(data))
 	req, err := http.NewRequest("GET", siteurl, strings.NewReader(data))
 	if err != nil {
 		fmt.Println("Fatal error ", err.Error())

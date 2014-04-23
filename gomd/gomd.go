@@ -20,6 +20,7 @@ func main() {
 	}
 }
 
+// 首页， 直接显示所有.md文件列表
 func listHandler(w http.ResponseWriter, r *http.Request) {
 	fileInfoArr, err := ioutil.ReadDir(".")
 	if err != nil {
