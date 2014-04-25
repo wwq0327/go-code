@@ -17,4 +17,12 @@ func main() {
 	fmt.Println("numb:", *numbPtr)
 
 	fmt.Println("tail: ", flag.Args())
+
+	if *wordPtr == "hello" {
+		hello()
+	}
+}
+
+func hello() {
+	fmt.Println("hello")
 }
