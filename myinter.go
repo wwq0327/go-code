@@ -21,5 +21,4 @@ func main() {
 	var h Humaner
 	h = m
 	h.Say()
-
 }
